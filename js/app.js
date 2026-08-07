@@ -1908,7 +1908,7 @@ function renderProfile(){
         '维持期:均衡训练与饮食'
       }</p>
     </div>
-    <button class="btn btn-danger btn-block mt-3" onclick="resetAllData()"><i class="fa-solid fa-triangle-exclamation"></i> 清空所有数据</button>
+    <button class="btn btn-danger btn-block mt-3" onclick="resetAllData()"><i class="fa-solid fa-triangle-exclamation"></i> 清空训练数据(保留基本信息)</button>
   `;
 }
 
@@ -1928,17 +1928,19 @@ function saveProfile(){
 }
 
 function resetAllData(){
-  if(!confirm('确定清空所有数据?此操作不可恢复!')) return;
-  if(!confirm('再次确认:所有训练记录、身体数据将被永久删除!')) return;
-  localStorage.removeItem(STORE_KEY);
-  localStorage.removeItem(SESSION_KEY);
+  if(!confirm('确定清空所有数据?此操作不可恢复!\n(将保留您已设置的基本信息)')) return;
+  if(!confirm('再次确认:所有训练记录、身体数据、PR记录将被永久删除!\n基本信息(姓名/性别/年龄/身高/体重/目标/级别)将被保留。')) return;
+  const keepProfile = state.profile;
   state = {
-    profile: { name:'FORGE', gender:'male', age:25, height:175, weight:70, goal:'bulk', level:'beginner' },
+    profile: keepProfile,
     workouts: [], measurements: [], prs: { bench:0, squat:0, deadlift:0, opress:0, row:0 },
     achievements: [], streak:0, lastWorkoutDate:null, totalWorkouts:0, trainedParts:0,
+    customParts: [], customExercises: [], customEquipment: [],
   };
   activeSession = null;
-  toast('所有数据已清空');
+  localStorage.removeItem(SESSION_KEY);
+  save();
+  toast('已清空所有训练数据,基本信息已保留');
   navigate('dashboard');
 }
 

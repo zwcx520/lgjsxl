@@ -301,6 +301,28 @@ body{
   height:100% !important;
 }
 
+/* PR列表容器 - 固定高度避免内容弹性布局抖动 */
+.pr-list-wrap{
+  position:relative;
+  width:100%;
+  height:220px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:thin;
+  scrollbar-color:var(--gold-dark) transparent;
+}
+.pr-list-wrap::-webkit-scrollbar{
+  width:6px;
+}
+.pr-list-wrap::-webkit-scrollbar-thumb{
+  background:var(--gold-dark);
+  border-radius:3px;
+  opacity:0.5;
+}
+.pr-list-wrap::-webkit-scrollbar-track{
+  background:transparent;
+}
+
 .card-header{
   display:flex;
   align-items:center;
