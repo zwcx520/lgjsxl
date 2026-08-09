@@ -77,6 +77,26 @@ function toast(msg, type='success'){
 function openModal(html){
   $('#modal-content').innerHTML = `<button class="modal-close-fixed" onclick="closeModal()" aria-label="关闭"><i class="fa-solid fa-xmark"></i></button>` + html;
   $('#modal-overlay').classList.add('active');
+  // 长描述文字启用跑马灯滚动
+  $$('.modal-hero-desc').forEach(el=>{
+    const text = el.textContent.trim();
+    if(!text) return;
+    // 临时单行检测是否溢出
+    const prevWS = el.style.whiteSpace;
+    el.style.whiteSpace = 'nowrap';
+    const overflow = el.scrollWidth > el.clientWidth + 5;
+    el.style.whiteSpace = prevWS;
+    if(overflow){
+      el.classList.add('marquee');
+      el.textContent = '';
+      const span = document.createElement('span');
+      span.className = 'modal-hero-desc-inner';
+      span.textContent = text;
+      el.appendChild(span);
+      const span2 = span.cloneNode(true);
+      el.appendChild(span2);
+    }
+  });
 }
 function closeModal(){
   $('#modal-overlay').classList.remove('active');
@@ -617,7 +637,24 @@ function showExerciseDetail(part, exId){
               ${e.tips.map(t=>`<li class="modal-tip-item"><i class="fa-solid fa-circle-check"></i><span>${t}</span></li>`).join('')}
             </ul>
           </div>`:''}
-          ${(!e.steps||e.steps.length===0)&&(!e.tips||e.tips.length===0)?'<div class="empty-state"><i class="fa-solid fa-pen"></i><p>暂无详细步骤,可编辑补充</p></div>':''}
+          ${(e.mistakes&&e.mistakes.length>0)?`
+          <div class="form-group">
+            <div class="form-group-title form-group-title-danger"><i class="fa-solid fa-triangle-exclamation"></i> 常见错误</div>
+            <ul class="modal-tip-list modal-mistake-list">
+              ${e.mistakes.map(t=>`<li class="modal-tip-item modal-mistake-item"><i class="fa-solid fa-circle-xmark"></i><span>${t}</span></li>`).join('')}
+            </ul>
+          </div>`:''}
+          ${(e.breathing)?`
+          <div class="form-group">
+            <div class="form-group-title form-group-title-info"><i class="fa-solid fa-wind"></i> 呼吸方法</div>
+            <div class="modal-text-block modal-breathing-block"><i class="fa-solid fa-quote-left modal-block-icon"></i><span>${e.breathing}</span></div>
+          </div>`:''}
+          ${(e.tempo)?`
+          <div class="form-group">
+            <div class="form-group-title form-group-title-gold"><i class="fa-solid fa-stopwatch"></i> 动作节奏与建议</div>
+            <div class="modal-text-block modal-tempo-block"><i class="fa-solid fa-gauge-high modal-block-icon"></i><span>${e.tempo}</span></div>
+          </div>`:''}
+          ${(!e.steps||e.steps.length===0)&&(!e.tips||e.tips.length===0)&&(!e.mistakes||e.mistakes.length===0)&&(!e.breathing)&&(!e.tempo)?'<div class="empty-state"><i class="fa-solid fa-pen"></i><p>暂无详细步骤,可编辑补充</p></div>':''}
         </div>
       </div>
     </div>

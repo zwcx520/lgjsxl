@@ -995,6 +995,35 @@ body{
   line-height:1.7;
   margin-top:10px;
   max-width:600px;
+  position:relative;
+  overflow:hidden;
+}
+/* 跑马灯滚动(长文字自动启用) */
+.modal-hero-desc.marquee{
+  white-space:nowrap;
+  max-width:none;
+  line-height:1.5;
+  mask-image:linear-gradient(90deg,transparent 0,#000 4%,#000 96%,transparent 100%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 4%,#000 96%,transparent 100%);
+}
+.modal-hero-desc-inner{
+  display:inline-block;
+  white-space:nowrap;
+  padding-right:48px;
+  will-change:transform;
+}
+.modal-hero-desc.marquee .modal-hero-desc-inner{
+  animation:modal-marquee 22s linear infinite;
+}
+.modal-hero-desc.marquee:hover .modal-hero-desc-inner{
+  animation-play-state:paused;
+}
+@keyframes modal-marquee{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+@media (prefers-reduced-motion:reduce){
+  .modal-hero-desc.marquee .modal-hero-desc-inner{animation:none;}
 }
 
 /* 弹窗标签栏 */
@@ -1215,6 +1244,54 @@ body{
   letter-spacing:1px;
 }
 .form-group-title i{font-size:14px;}
+
+/* 弹窗分组标题变体(常见错误/呼吸/节奏) */
+.form-group-title-danger{color:#ef4444;}
+.form-group-title-danger i{color:#ef4444;}
+.form-group-title-info{color:#3b82f6;}
+.form-group-title-info i{color:#3b82f6;}
+.form-group-title-gold{color:var(--gold);}
+.form-group-title-gold i{color:var(--gold);}
+
+/* 常见错误列表(红色警示风格) */
+.modal-mistake-list .modal-mistake-item i{
+  color:#ef4444;
+}
+.modal-mistake-item{
+  background:rgba(239,68,68,0.04);
+  border-radius:6px;
+  padding:10px 12px !important;
+  margin-bottom:6px;
+  border-bottom:1px solid rgba(239,68,68,0.1) !important;
+}
+.modal-mistake-item:last-child{border-bottom:none !important;margin-bottom:0;}
+
+/* 呼吸/节奏文本块(引言风格) */
+.modal-text-block{
+  position:relative;
+  padding:14px 16px 14px 44px;
+  border-radius:8px;
+  font-size:13px;
+  line-height:1.75;
+  color:var(--text-secondary);
+}
+.modal-block-icon{
+  position:absolute;
+  left:14px;
+  top:14px;
+  font-size:16px;
+  opacity:0.55;
+}
+.modal-breathing-block{
+  background:rgba(59,130,246,0.06);
+  border-left:3px solid #3b82f6;
+}
+.modal-breathing-block .modal-block-icon{color:#3b82f6;}
+.modal-tempo-block{
+  background:rgba(212,175,55,0.06);
+  border-left:3px solid var(--gold);
+}
+.modal-tempo-block .modal-block-icon{color:var(--gold);}
 
 /* 弹窗饮食卡片 */
 .meal-card{
@@ -1447,8 +1524,24 @@ body{
   
   .body-map-container{flex-direction:column;align-items:center;}
   .body-svg-wrap{flex:1;width:100%;max-width:280px;}
-  
+
   .user-chip span{display:none;}
+
+  /* 弹窗手机端优化 */
+  .modal-header{padding:14px 18px;}
+  .modal-title{font-size:19px;}
+  .modal-close{width:36px;height:36px;font-size:22px;}
+  .modal-body{padding:18px;}
+  .modal-footer{padding:14px 18px;flex-wrap:wrap;}
+
+  .modal-close-fixed{top:12px;right:12px;width:38px;height:38px;font-size:17px;}
+
+  .modal-hero{padding:20px 18px;padding-right:58px;}
+  .modal-hero-content{gap:14px;align-items:center;}
+  .modal-hero-icon{width:54px;height:54px;border-radius:13px;font-size:24px;}
+  .modal-hero-text .modal-title{font-size:21px;line-height:1.25;}
+  .modal-hero-text .modal-sub{font-size:11px;letter-spacing:1.2px;margin-top:3px;}
+  .modal-hero-desc{font-size:13px;line-height:1.65;margin-top:8px;}
 }
 
 @media (max-width:480px){
@@ -1457,6 +1550,26 @@ body{
   .card{padding:16px;}
   .plan-card{padding:18px;}
   .timer-display{font-size:44px;}
+
+  /* 弹窗超窄屏进一步紧凑 */
+  .modal-header{padding:12px 14px;}
+  .modal-title{font-size:17px;}
+  .modal-close{width:34px;height:34px;font-size:20px;}
+  .modal-body{padding:14px;}
+  .modal-footer{padding:12px 14px;gap:8px;}
+
+  .modal-close-fixed{top:10px;right:10px;width:36px;height:36px;font-size:16px;}
+
+  .modal-hero{padding:16px 14px;padding-right:54px;}
+  .modal-hero-content{gap:10px;}
+  .modal-hero-icon{width:46px;height:46px;border-radius:11px;font-size:20px;}
+  .modal-hero-text .modal-title{font-size:18px;line-height:1.2;}
+  .modal-hero-text .modal-sub{font-size:10px;letter-spacing:1px;margin-top:2px;}
+  .modal-hero-desc{font-size:12.5px;line-height:1.6;margin-top:6px;}
+
+  /* 长标题换行优化 */
+  .modal-hero-text{min-width:0;}
+  .modal-hero-text .modal-title{word-break:break-word;overflow-wrap:break-word;}
 }
 
 /* 遮罩层 */
