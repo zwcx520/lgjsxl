@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>全栈技术架构 · 力哥健身训练系统</title>
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="lib/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="lib/google-fonts/fonts.css">
+<style>
+:root{
+  --bg-darkest:#0a0a0b;
+  --bg-dark:#121316;
+  --bg-card:#1a1c20;
+  --bg-card-hover:#22252b;
+  --bg-elevated:#2a2d34;
+  --gold:#d4af37;
+  --gold-light:#e8c454;
+  --gold-dark:#a8851f;
+  --red:#dc2626;
+  --green:#10b981;
+  --blue:#3b82f6;
+  --orange:#f59e0b;
+  --purple:#a855f7;
+  --cyan:#06b6d4;
+  --text-primary:#f5f5f5;
+  --text-secondary:#a0a0a0;
+  --text-muted:#6b7280;
+  --border:#2a2d34;
+  --border-light:#3a3d44;
+  --shadow:0 4px 20px rgba(0,0,0,0.4);
+  --shadow-gold:0 4px 20px rgba(212,175,55,0.25);
+  --radius:10px;
+  --radius-sm:6px;
+  --radius-lg:16px;
+  --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter','Segoe UI',system-ui,sans-serif;
+  background:var(--bg-darkest);
+  color:var(--text-primary);
+  line-height:1.7;
+  font-size:15px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-track{background:var(--bg-dark);}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-dark);}
+
+/* ===== 侧边导航 ===== */
+.toc{
+  position:fixed;top:0;left:0;bottom:0;
+  width:260px;
+  background:linear-gradient(180deg,var(--bg-dark) 0%,var(--bg-darkest) 100%);
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  z-index:100;
+  padding:28px 20px;
+  transition:transform 0.3s ease;
+}
+.toc-brand{
+  font-family:'Oswald',sans-serif;
+  font-size:22px;font-weight:700;
+  color:var(--gold);letter-spacing:1px;
+  margin-bottom:4px;
+  display:flex;align-items:center;gap:10px;
+}
+.toc-brand i{font-size:24px;}
+.toc-brand-sub{
+  font-size:10px;color:var(--text-muted);
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:24px;padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.toc-section-label{
+  font-size:10px;font-weight:700;
+  color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1.5px;
+  margin:18px 0 8px;padding-left:12px;
+}
+.toc-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:var(--radius-sm);
+  text-decoration:none;color:var(--text-secondary);
+  font-size:13px;transition:var(--transition);
+  border-left:3px solid transparent;
+}
+.toc-item:hover{background:var(--bg-card);color:var(--text-primary);}
+.toc-item.active{
+  background:rgba(212,175,55,0.08);
+  border-left-color:var(--gold);
+  color:var(--gold);font-weight:600;
+}
+.toc-num{
+  font-family:'Oswald',sans-serif;
+  font-size:14px;font-weight:700;
+  color:var(--gold);min-width:20px;opacity:0.7;
+}
+.toc-item.active .toc-num{opacity:1;}
+
+/* ===== 主内容 ===== */
+.main-wrap{
+  margin-left:260px;
+  padding:0 48px 80px;
+  max-width:1100px;
+}
+
+/* ===== Hero ===== */
+.hero{
+  text-align:center;
+  padding:80px 0 60px;
+  position:relative;
+  border-bottom:1px solid var(--border);
+  margin-bottom:60px;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:0;right:-10%;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(212,175,55,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(212,175,55,0.1);
+  border:1px solid var(--gold);
+  color:var(--gold);
+  padding:6px 18px;border-radius:20px;
+  font-size:13px;font-weight:600;
+  letter-spacing:0.05em;
+  margin-bottom:24px;
+}
+.hero h1{
+  font-family:'Oswald',sans-serif;
+  font-size:48px;font-weight:700;
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+.hero h1 .gold{color:var(--gold);}
+.hero .subtitle{
+  font-size:17px;color:var(--text-muted);
+  max-width:600px;margin:0 auto;
+}
+.hero-meta{
+  display:flex;gap:32px;
+  justify-content:center;
+  margin-top:40px;flex-wrap:wrap;
+}
+.hero-meta-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;color:var(--text-secondary);
+}
+.hero-meta-item strong{
+  color:var(--gold);
+  font-family:'Oswald',sans-serif;
+  font-size:24px;
+}
+.hero-meta-item i{color:var(--gold-dark);}
+
+/* ===== Section ===== */
+section.arch-section{
+  padding:48px 0;
+  border-bottom:1px solid var(--border);
+  scroll-margin-top:20px;
+}
+section.arch-section:last-child{border-bottom:none;}
+.section-header{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:36px;
+}
+.section-num{
+  font-family:'Oswald',sans-serif;
+  font-size:40px;font-weight:700;
+  color:var(--gold);line-height:1;opacity:0.9;
+  min-width:56px;
+}
+.section-title-group h2{
+  font-family:'Oswald',sans-serif;
+  font-size:26px;font-weight:700;
+  letter-spacing:0.5px;
+}
+.section-title-group .en{
+  font-size:11px;color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+/* ===== 技术栈卡片 ===== */
+.tech-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:16px;
+}
+.tech-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px 20px;
+  text-align:center;
+  transition:var(--transition);
+  position:relative;
+  overflow:hidden;
+}
+.tech-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:var(--tech-color,var(--gold));
+  opacity:0.8;
+}
+.tech-card:hover{
+  border-color:var(--border-light);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.tech-icon{
+  width:52px;height:52px;
+  margin:0 auto 16px;
+  border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;
+  background:var(--tech-color,var(--gold));
+  color:var(--bg-darkest);
+  box-shadow:0 4px 12px var(--tech-color-shadow,rgba(212,175,55,0.3));
+}
+.tech-name{
+  font-family:'Oswald',sans-serif;
+  font-size:17px;font-weight:600;
+  margin-bottom:4px;
+}
+.tech-version{
+  font-size:12px;color:var(--text-muted);
+  font-family:'Oswald',sans-serif;
+  margin-bottom:10px;
+}
+.tech-desc{
+  font-size:13px;color:var(--text-secondary);
+  line-height:1.6;
+}
+.tech-tag{
+  display:inline-block;
+  margin-top:10px;
+  padding:2px 10px;border-radius:10px;
+  font-size:11px;font-weight:600;
+  background:rgba(212,175,55,0.12);
+  color:var(--gold);
+}
+
+/* ===== 架构图容器 ===== */
+.diagram-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:32px;
+  margin-bottom:24px;
+  overflow-x:auto;
+}
+.diagram-card svg{width:100%;height:auto;}
+
+/* ===== 分层架构 ===== */
+.layer-stack{
+  display:flex;flex-direction:column;
+  gap:12px;
+}
+.layer{
+  background:var(--bg-elevated);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius);
+  padding:20px 24px;
+  display:flex;align-items:center;
+  gap:20px;
+  transition:var(--transition);
+  position:relative;
+}
+.layer:hover{border-color:var(--gold-dark);}
+.layer-tag{
+  position:absolute;top:-1px;left:24px;
+  background:var(--layer-color,var(--gold));
+  color:var(--bg-darkest);
+  font-family:'Oswald',sans-serif;
+  font-size:10px;font-weight:700;
+  padding:2px 12px;border-radius:0 0 6px 6px;
+  letter-spacing:1px;
+}
+.layer-icon{
+  width:48px;height:48px;
+  border-radius:var(--radius-sm);
+  background:var(--layer-color,var(--gold));
+  color:var(--bg-darkest);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+  margin-top:8px;
+}
+.layer-body{flex:1;}
+.layer-title{
+  font-family:'Oswald',sans-serif;
+  font-size:18px;font-weight:600;
+  margin-bottom:4px;
+}
+.layer-desc{font-size:13px;color:var(--text-secondary);}
+.layer-items{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-top:8px;
+}
+.layer-item{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  padding:3px 10px;border-radius:12px;
+  font-size:12px;color:var(--text-secondary);
+}
+.layer-arrow{
+  text-align:center;
+  color:var(--text-muted);
+  font-size:20px;
+  padding:4px 0;
+}
+
+/* ===== 功能模块矩阵 ===== */
+.module-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:16px;
+}
+.module-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  transition:var(--transition);
+  border-top:3px solid var(--module-color,var(--gold));
+}
+.module-card:hover{
+  border-color:var(--border-light);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.module-card-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:12px;
+}
+.module-card-icon{
+  width:40px;height:40px;
+  border-radius:var(--radius-sm);
+  background:var(--module-color,var(--gold));
+  color:var(--bg-darkest);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.module-card-title{
+  font-family:'Oswald',sans-serif;
+  font-size:16px;font-weight:600;
+}
+.module-card-group{
+  font-size:11px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1px;
+}
+.module-card-funcs{
+  list-style:none;padding:0;
+}
+.module-card-funcs li{
+  font-size:13px;color:var(--text-secondary);
+  padding:4px 0;
+  display:flex;align-items:flex-start;gap:6px;
+}
+.module-card-funcs li::before{
+  content:'\f054';font-family:'Font Awesome 6 Free';
+  font-weight:900;font-size:8px;
+  color:var(--module-color,var(--gold));
+  margin-top:7px;flex-shrink:0;
+}
+
+/* ===== 文件树 ===== */
+.file-tree{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  font-family:'Courier New',monospace;
+  font-size:14px;
+  line-height:2;
+  overflow-x:auto;
+}
+.tree-node{color:var(--text-secondary);}
+.tree-dir{color:var(--gold);font-weight:600;}
+.tree-file{color:var(--text-secondary);}
+.tree-comment{color:var(--text-muted);font-style:italic;margin-left:8px;}
+.tree-icon{display:inline-block;width:20px;text-align:center;margin-right:4px;}
+.tree-indent{padding-left:24px;}
+.tree-indent-2{padding-left:48px;}
+.tree-indent-3{padding-left:72px;}
+
+/* ===== 数据模型 ===== */
+.data-model-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+}
+.data-model-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-left:4px solid var(--model-color,var(--gold));
+  border-radius:var(--radius);
+  padding:20px;
+}
+.data-model-card h4{
+  font-family:'Oswald',sans-serif;
+  font-size:15px;font-weight:600;
+  color:var(--model-color,var(--gold));
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.data-model-card pre{
+  background:var(--bg-darkest);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px 16px;
+  font-family:'Courier New',monospace;
+  font-size:13px;
+  color:var(--text-secondary);
+  overflow-x:auto;
+  line-height:1.8;
+}
+.data-model-card pre .key{color:var(--gold);}
+.data-model-card pre .type{color:var(--cyan);}
+.data-model-card pre .str{color:var(--green);}
+.data-model-card pre .comment{color:var(--text-muted);font-style:italic;}
+.data-model-card p{font-size:13px;color:var(--text-secondary);margin-top:8px;}
+
+/* ===== 设计系统 ===== */
+.design-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;
+}
+.design-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+}
+.design-card h4{
+  font-family:'Oswald',sans-serif;
+  font-size:16px;font-weight:600;
+  color:var(--gold);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.color-swatch-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:10px;
+}
+.color-swatch{
+  background:var(--bg-darkest);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px;
+  text-align:center;
+}
+.swatch-color{
+  width:100%;height:40px;
+  border-radius:var(--radius-sm);
+  margin-bottom:8px;
+}
+.swatch-name{font-size:12px;color:var(--text-secondary);font-weight:600;}
+.swatch-value{font-size:11px;color:var(--text-muted);font-family:'Courier New',monospace;}
+
+.font-demo{
+  padding:12px;
+  background:var(--bg-darkest);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  margin-bottom:8px;
+}
+.font-demo .sample{
+  font-size:24px;margin-bottom:4px;
+}
+.font-demo .info{
+  font-size:11px;color:var(--text-muted);
+  font-family:'Courier New',monospace;
+}
+
+.metric-row{
+  display:flex;gap:16px;flex-wrap:wrap;
+  margin-top:16px;
+}
+.metric-item{
+  flex:1;min-width:100px;
+  background:var(--bg-elevated);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:16px;text-align:center;
+}
+.metric-num{
+  font-family:'Oswald',sans-serif;
+  font-size:28px;font-weight:700;
+  color:var(--gold);
+}
+.metric-label{
+  font-size:12px;color:var(--text-muted);
+  margin-top:4px;
+}
+
+/* ===== 存储机制 ===== */
+.storage-flow{
+  display:flex;align-items:center;
+  gap:16px;flex-wrap:wrap;
+  justify-content:center;
+  padding:24px;
+}
+.storage-box{
+  background:var(--bg-elevated);
+  border:2px solid var(--border-light);
+  border-radius:var(--radius);
+  padding:16px 24px;
+  text-align:center;
+  min-width:160px;
+  transition:var(--transition);
+}
+.storage-box:hover{border-color:var(--gold);}
+.storage-box.highlight{
+  border-color:var(--gold);
+  box-shadow:var(--shadow-gold);
+}
+.storage-box .sb-icon{
+  font-size:24px;margin-bottom:8px;
+  color:var(--gold);
+}
+.storage-box .sb-title{
+  font-family:'Oswald',sans-serif;
+  font-size:14px;font-weight:600;
+}
+.storage-box .sb-sub{
+  font-size:11px;color:var(--text-muted);
+  margin-top:2px;
+}
+.storage-arrow{
+  color:var(--gold-dark);font-size:20px;
+}
+.storage-keys{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:24px;
+}
+.storage-key-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  border-top:3px solid var(--key-color,var(--gold));
+}
+.storage-key-card h5{
+  font-family:'Courier New',monospace;
+  font-size:14px;font-weight:600;
+  color:var(--key-color,var(--gold));
+  margin-bottom:8px;
+}
+.storage-key-card p{font-size:13px;color:var(--text-secondary);}
+.storage-key-card .key-type{
+  display:inline-block;
+  padding:2px 8px;border-radius:8px;
+  font-size:11px;font-weight:600;
+  background:rgba(212,175,55,0.12);
+  color:var(--gold);
+  margin-top:6px;
+}
+
+/* ===== Callout ===== */
+.callout{
+  background:rgba(212,175,55,0.05);
+  border-left:4px solid var(--gold);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  padding:16px 20px;
+  margin:20px 0;
+}
+.callout-title{
+  color:var(--gold);font-weight:600;
+  font-size:14px;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.callout p{font-size:13px;color:var(--text-secondary);margin:0;}
+
+/* ===== 表格 ===== */
+.table-wrap{
+  overflow-x:auto;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+}
+table{
+  width:100%;border-collapse:collapse;
+  font-size:14px;
+}
+thead{background:var(--bg-elevated);}
+th{
+  padding:12px 16px;text-align:left;
+  font-family:'Oswald',sans-serif;
+  font-weight:600;color:var(--gold);
+  font-size:13px;letter-spacing:0.5px;
+  border-bottom:2px solid var(--gold-dark);
+}
+td{
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  color:var(--text-secondary);
+}
+tbody tr:hover{background:rgba(212,175,55,0.03);}
+.badge{
+  display:inline-block;padding:2px 10px;
+  border-radius:8px;font-size:12px;font-weight:600;
+}
+.badge-gold{background:rgba(212,175,55,0.15);color:var(--gold);}
+.badge-green{background:rgba(16,185,129,0.15);color:var(--green);}
+.badge-blue{background:rgba(59,130,246,0.15);color:var(--blue);}
+.badge-red{background:rgba(220,38,38,0.15);color:var(--red);}
+.badge-purple{background:rgba(168,85,247,0.15);color:var(--purple);}
+.badge-cyan{background:rgba(6,182,212,0.15);color:var(--cyan);}
+
+/* ===== 页脚 ===== */
+.footer{
+  text-align:center;
+  padding:48px 24px;
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+.footer-brand{
+  font-family:'Oswald',sans-serif;
+  font-size:18px;color:var(--gold);
+  margin-bottom:8px;
+}
+.footer p{font-size:13px;color:var(--text-muted);}
+
+/* ===== 移动端 ===== */
+.toc-toggle{
+  display:none;position:fixed;
+  top:16px;left:16px;z-index:200;
+  width:44px;height:44px;
+  background:var(--bg-card);
+  border:1px solid var(--gold);
+  border-radius:var(--radius-sm);
+  color:var(--gold);font-size:18px;
+  cursor:pointer;
+  align-items:center;justify-content:center;
+}
+.toc-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.6);z-index:99;
+}
+.toc-overlay.show{display:block;}
+@media(max-width:1024px){
+  .toc{transform:translateX(-100%);box-shadow:4px 0 30px rgba(0,0,0,0.5);}
+  .toc.open{transform:translateX(0);}
+  .main-wrap{margin-left:0;padding:0 24px 60px;}
+  .toc-toggle{display:flex;}
+  .hero h1{font-size:36px;}
+  .section-num{font-size:32px;}
+  .storage-keys{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .hero h1{font-size:28px;}
+  .hero-meta{gap:20px;}
+  .section-header{flex-direction:column;align-items:flex-start;gap:8px;}
+  .layer{flex-direction:column;align-items:flex-start;text-align:left;}
+  .storage-flow{flex-direction:column;}
+  .storage-arrow{transform:rotate(90deg);}
+}
+</style>
+</head>
+<body>
+
+<!-- 侧边导航 -->
+<button class="toc-toggle" id="tocToggle"><i class="fa-solid fa-bars"></i></button>
+<div class="toc-overlay" id="tocOverlay"></div>
+<nav class="toc" id="toc">
+  <div class="toc-brand"><i class="fa-solid fa-dumbbell"></i> 力哥 · 架构</div>
+  <div class="toc-brand-sub">TECHNICAL ARCHITECTURE</div>
+  <div class="toc-section-label">总览</div>
+  <a href="#s01" class="toc-item"><span class="toc-num">01</span> 系统总览</a>
+  <a href="#s02" class="toc-item"><span class="toc-num">02</span> 技术栈</a>
+  <div class="toc-section-label">架构</div>
+  <a href="#s03" class="toc-item"><span class="toc-num">03</span> 分层架构</a>
+  <a href="#s04" class="toc-item"><span class="toc-num">04</span> 数据流</a>
+  <a href="#s05" class="toc-item"><span class="toc-num">05</span> 功能模块矩阵</a>
+  <div class="toc-section-label">实现</div>
+  <a href="#s06" class="toc-item"><span class="toc-num">06</span> 文件结构</a>
+  <a href="#s07" class="toc-item"><span class="toc-num">07</span> 数据模型</a>
+  <a href="#s08" class="toc-item"><span class="toc-num">08</span> 存储机制</a>
+  <div class="toc-section-label">设计</div>
+  <a href="#s09" class="toc-item"><span class="toc-num">09</span> 设计系统</a>
+  <a href="#s10" class="toc-item"><span class="toc-num">10</span> 第三方依赖</a>
+</nav>
+
+<!-- 主内容 -->
+<div class="main-wrap">
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="hero-badge"><i class="fa-solid fa-sitemap"></i> 全栈技术架构文档</div>
+  <h1>力哥健身训练系统<br><span class="gold">Technical Architecture</span></h1>
+  <p class="subtitle">纯前端零后端架构 · localStorage 持久化 · 单页应用 · 响应式设计</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><i class="fa-solid fa-layer-group"></i><strong>4</strong> 架构分层</div>
+    <div class="hero-meta-item"><i class="fa-solid fa-cube"></i><strong>12</strong> 功能模块</div>
+    <div class="hero-meta-item"><i class="fa-solid fa-database"></i><strong>2</strong> 存储键</div>
+    <div class="hero-meta-item"><i class="fa-solid fa-code-branch"></i><strong>7</strong> 技术栈</div>
+    <div class="hero-meta-item"><i class="fa-solid fa-file-code"></i><strong>9</strong> 源文件</div>
+  </div>
+</header>
+
+<!-- ===== 01 系统总览 ===== -->
+<section class="arch-section" id="s01">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-title-group">
+      <h2>系统总览</h2>
+      <div class="en">SYSTEM OVERVIEW</div>
+    </div>
+  </div>
+  <p style="font-size:16px;color:var(--text-secondary);max-width:700px;margin-bottom:32px;">
+    力哥健身训练系统是一款纯前端单页应用（SPA），采用原生 HTML/CSS/JavaScript 构建，
+    无需任何后端服务器，所有数据通过浏览器 <code style="color:var(--gold);">localStorage</code> 本地存储。
+    系统覆盖训练管理全流程，包含 12 个功能模块、56+ 训练动作、6 套训练计划。
+  </p>
+  <div class="metric-row">
+    <div class="metric-item"><div class="metric-num">0</div><div class="metric-label">后端依赖</div></div>
+    <div class="metric-item"><div class="metric-num">100%</div><div class="metric-label">离线可用</div></div>
+    <div class="metric-item"><div class="metric-num">SPA</div><div class="metric-label">单页架构</div></div>
+    <div class="metric-item"><div class="metric-num">2</div><div class="metric-label">存储键值</div></div>
+    <div class="metric-item"><div class="metric-num">~200KB</div><div class="metric-label">核心体积</div></div>
+  </div>
+  <div class="callout" style="margin-top:32px;">
+    <div class="callout-title"><i class="fa-solid fa-lightbulb"></i> 核心设计理念</div>
+    <p>零后端、零数据库、零云服务 —— 所有业务逻辑和数据持久化完全在用户浏览器中完成，隐私数据不出设备。</p>
+  </div>
+</section>
+
+<!-- ===== 02 技术栈 ===== -->
+<section class="arch-section" id="s02">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-title-group">
+      <h2>技术栈</h2>
+      <div class="en">TECHNOLOGY STACK</div>
+    </div>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-card" style="--tech-color:#e34f26;--tech-color-shadow:rgba(227,79,38,0.3);">
+      <div class="tech-icon"><i class="fa-brands fa-html5"></i></div>
+      <div class="tech-name">HTML5</div>
+      <div class="tech-version">v5 / Semantic</div>
+      <p class="tech-desc">单页应用结构，语义化标签，内联SVG人体图</p>
+      <span class="tech-tag">结构层</span>
+    </div>
+    <div class="tech-card" style="--tech-color:#1572b6;--tech-color-shadow:rgba(21,114,182,0.3);">
+      <div class="tech-icon"><i class="fa-brands fa-css3-alt"></i></div>
+      <div class="tech-name">CSS3</div>
+      <div class="tech-version">Custom Properties</div>
+      <p class="tech-desc">CSS变量主题系统，Flex/Grid响应式布局，动画过渡</p>
+      <span class="tech-tag">表现层</span>
+    </div>
+    <div class="tech-card" style="--tech-color:#f7df1e;--tech-color-shadow:rgba(247,223,30,0.3);">
+      <div class="tech-icon"><i class="fa-brands fa-js"></i></div>
+      <div class="tech-name">JavaScript</div>
+      <div class="tech-version">ES6+ / Vanilla</div>
+      <p class="tech-desc">原生JS无框架，模块化函数，DOM操作驱动渲染</p>
+      <span class="tech-tag">逻辑层</span>
+    </div>
+    <div class="tech-card" style="--tech-color:#ff6384;--tech-color-shadow:rgba(255,99,132,0.3);">
+      <div class="tech-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="tech-name">Chart.js</div>
+      <div class="tech-version">v4 UMD</div>
+      <p class="tech-desc">柱状图/环形图/折线图，本地化引入</p>
+      <span class="tech-tag">可视化</span>
+    </div>
+    <div class="tech-card" style="--tech-color:#528dd7;--tech-color-shadow:rgba(82,141,215,0.3);">
+      <div class="tech-icon"><i class="fa-brands fa-font-awesome"></i></div>
+      <div class="tech-name">Font Awesome</div>
+      <div class="tech-version">v6 Free</div>
+      <p class="tech-desc">全站图标系统，本地化字体文件</p>
+      <span class="tech-tag">图标</span>
+    </div>
+    <div class="tech-card" style="--tech-color:#ea4335;--tech-color-shadow:rgba(234,67,53,0.3);">
+      <div class="tech-icon"><i class="fa-brands fa-google"></i></div>
+      <div class="tech-name">Google Fonts</div>
+      <div class="tech-version">Oswald + Inter</div>
+      <p class="tech-desc">显示字体Oswald + 正文字体Inter，本地化woff2</p>
+      <span class="tech-tag">字体</span>
+    </div>
+    <div class="tech-card" style="--tech-color:#10b981;--tech-color-shadow:rgba(16,185,129,0.3);">
+      <div class="tech-icon"><i class="fa-solid fa-database"></i></div>
+      <div class="tech-name">localStorage</div>
+      <div class="tech-version">Web Storage API</div>
+      <p class="tech-desc">JSON序列化持久化，2个核心键，离线存储</p>
+      <span class="tech-tag">存储层</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 03 分层架构 ===== -->
+<section class="arch-section" id="s03">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-title-group">
+      <h2>分层架构</h2>
+      <div class="en">LAYERED ARCHITECTURE</div>
+    </div>
+  </div>
+  <p style="font-size:16px;color:var(--text-secondary);max-width:700px;margin-bottom:32px;">
+    系统采用经典的四层架构，从上到下依次为：表现层 → 逻辑层 → 数据层 → 存储层。
+    每层职责单一，通过函数调用衔接。
+  </p>
+
+  <div class="layer-stack">
+    <!-- 表现层 -->
+    <div class="layer" style="--layer-color:var(--blue);">
+      <div class="layer-tag">LAYER 1</div>
+      <div class="layer-icon"><i class="fa-solid fa-window-maximize"></i></div>
+      <div class="layer-body">
+        <div class="layer-title" style="color:var(--blue);">表现层 · Presentation Layer</div>
+        <div class="layer-desc">HTML结构 + CSS样式 + SVG图形，负责界面渲染与用户交互</div>
+        <div class="layer-items">
+          <span class="layer-item">index.html (SPA容器)</span>
+          <span class="layer-item">styles.css (主题+布局+组件)</span>
+          <span class="layer-item">SVG人体图</span>
+          <span class="layer-item">模态框系统</span>
+          <span class="layer-item">Toast通知</span>
+          <span class="layer-item">响应式断点</span>
+        </div>
+      </div>
+    </div>
+    <div class="layer-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+
+    <!-- 逻辑层 -->
+    <div class="layer" style="--layer-color:var(--gold);">
+      <div class="layer-tag">LAYER 2</div>
+      <div class="layer-icon"><i class="fa-solid fa-gears"></i></div>
+      <div class="layer-body">
+        <div class="layer-title" style="color:var(--gold);">逻辑层 · Logic Layer</div>
+        <div class="layer-desc">app.js 核心应用逻辑，函数式编程，DOM操作驱动渲染</div>
+        <div class="layer-items">
+          <span class="layer-item">navigate() 路由切换</span>
+          <span class="layer-item">render*() 12个渲染函数</span>
+          <span class="layer-item">finishSession() 训练完成处理</span>
+          <span class="layer-item">calc*() 计算器引擎</span>
+          <span class="layer-item">checkAchievements() 成就检测</span>
+          <span class="layer-item">toast() 通知系统</span>
+          <span class="layer-item">openModal/closeModal 模态框</span>
+        </div>
+      </div>
+    </div>
+    <div class="layer-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+
+    <!-- 数据层 -->
+    <div class="layer" style="--layer-color:var(--purple);">
+      <div class="layer-tag">LAYER 3</div>
+      <div class="layer-icon"><i class="fa-solid fa-database"></i></div>
+      <div class="layer-body">
+        <div class="layer-title" style="color:var(--purple);">数据层 · Data Layer</div>
+        <div class="layer-desc">data.js 静态数据库 + state 运行时状态对象</div>
+        <div class="layer-items">
+          <span class="layer-item">EXERCISE_DB (56+动作)</span>
+          <span class="layer-item">TRAINING_PLANS (6套计划)</span>
+          <span class="layer-item">MEAL_PLANS (3套饮食)</span>
+          <span class="layer-item">ACHIEVEMENTS (11项成就)</span>
+          <span class="layer-item">state对象 (运行时状态)</span>
+          <span class="layer-item">activeSession (训练会话)</span>
+        </div>
+      </div>
+    </div>
+    <div class="layer-arrow"><i class="fa-solid fa-arrow-down-long"></i></div>
+
+    <!-- 存储层 -->
+    <div class="layer" style="--layer-color:var(--green);">
+      <div class="layer-tag">LAYER 4</div>
+      <div class="layer-icon"><i class="fa-solid fa-hard-drive"></i></div>
+      <div class="layer-body">
+        <div class="layer-title" style="color:var(--green);">存储层 · Storage Layer</div>
+        <div class="layer-desc">浏览器 localStorage 持久化，JSON序列化，零网络传输</div>
+        <div class="layer-items">
+          <span class="layer-item">forge_fitness_data (主数据)</span>
+          <span class="layer-item">forge_active_session (训练会话)</span>
+          <span class="layer-item">app_tip_version (欢迎弹窗版本)</span>
+          <span class="layer-item">JSON.parse / JSON.stringify</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 04 数据流 ===== -->
+<section class="arch-section" id="s04">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-title-group">
+      <h2>数据流</h2>
+      <div class="en">DATA FLOW</div>
+    </div>
+  </div>
+  <p style="font-size:16px;color:var(--text-secondary);max-width:700px;margin-bottom:32px;">
+    系统采用单向数据流：用户交互 → 更新 state → 保存 localStorage → 重新渲染 DOM。
+    训练会话独立存储，支持刷新不丢失。
+  </p>
+
+  <div class="diagram-card">
+    <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M1 1 L7 4 L1 7 Z" fill="#a8851f"/>
+        </marker>
+        <marker id="arrowhead-green" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M1 1 L7 4 L1 7 Z" fill="#10b981"/>
+        </marker>
+      </defs>
+
+      <!-- 用户输入 -->
+      <rect x="280" y="20" width="200" height="56" rx="28" fill="#1a1c20" stroke="#3b82f6" stroke-width="2"/>
+      <text x="380" y="46" text-anchor="middle" fill="#3b82f6" font-family="Oswald" font-size="15" font-weight="700">用户交互</text>
+      <text x="380" y="64" text-anchor="middle" fill="#a0a0a0" font-size="11">点击/输入/提交</text>
+
+      <!-- 箭头 -->
+      <path d="M380 80 L380 108" fill="none" stroke="#a8851f" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- 逻辑处理 -->
+      <rect x="260" y="112" width="240" height="56" rx="10" fill="#1a1c20" stroke="#d4af37" stroke-width="2"/>
+      <text x="380" y="138" text-anchor="middle" fill="#d4af37" font-family="Oswald" font-size="15" font-weight="700">逻辑处理 (app.js)</text>
+      <text x="380" y="156" text-anchor="middle" fill="#a0a0a0" font-size="11">事件处理 → 更新state对象</text>
+
+      <!-- 分支箭头 -->
+      <path d="M380 172 L380 190" fill="none" stroke="#a8851f" stroke-width="2"/>
+      <path d="M380 190 L200 190 L200 210" fill="none" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead-green)"/>
+      <path d="M380 190 L560 190 L560 210" fill="none" stroke="#a8851f" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+      <!-- 持久化 -->
+      <rect x="100" y="214" width="200" height="56" rx="10" fill="#1a1c20" stroke="#10b981" stroke-width="2"/>
+      <text x="200" y="240" text-anchor="middle" fill="#10b981" font-family="Oswald" font-size="15" font-weight="700">save()</text>
+      <text x="200" y="258" text-anchor="middle" fill="#a0a0a0" font-size="11">localStorage.setItem</text>
+
+      <!-- 渲染 -->
+      <rect x="460" y="214" width="200" height="56" rx="10" fill="#1a1c20" stroke="#d4af37" stroke-width="2"/>
+      <text x="560" y="240" text-anchor="middle" fill="#d4af37" font-family="Oswald" font-size="15" font-weight="700">render*()</text>
+      <text x="560" y="258" text-anchor="middle" fill="#a0a0a0" font-size="11">DOM更新 → 界面刷新</text>
+
+      <!-- 回流箭头 -->
+      <path d="M200 272 L200 300 L560 300 L560 272" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrowhead)"/>
+      <text x="380" y="316" text-anchor="middle" fill="#6b7280" font-size="11">渲染完成后用户看到更新</text>
+
+      <!-- 启动加载 -->
+      <path d="M100 242 L60 242 L60 140 L260 140" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrowhead)"/>
+      <text x="60" y="190" text-anchor="middle" fill="#6b7280" font-size="10" transform="rotate(-90 60 190)">load() 启动时恢复</text>
+    </svg>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title"><i class="fa-solid fa-circle-info"></i> 训练会话独立存储</div>
+    <p>训练过程中每次修改重量/次数都会自动调用 <code style="color:var(--gold);">saveSession()</code> 写入 <code style="color:var(--gold);">forge_active_session</code>，刷新页面后自动恢复，训练完成时清除该键。</p>
+  </div>
+</section>
+
+<!-- ===== 05 功能模块矩阵 ===== -->
+<section class="arch-section" id="s05">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-title-group">
+      <h2>功能模块矩阵</h2>
+      <div class="en">MODULE MATRIX</div>
+    </div>
+  </div>
+  <div class="module-grid">
+    <!-- 概览 -->
+    <div class="module-card" style="--module-color:var(--gold);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-gauge-high"></i></div>
+        <div><div class="module-card-title">仪表盘</div><div class="module-card-group">概览</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>4张统计卡片</li>
+        <li>周训练量柱状图</li>
+        <li>部位分布环形图</li>
+        <li>今日推荐训练</li>
+        <li>最近5条训练记录</li>
+      </ul>
+    </div>
+    <!-- 训练计划 -->
+    <div class="module-card" style="--module-color:var(--red);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div><div class="module-card-title">训练计划</div><div class="module-card-group">训练</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>6套预设计划展示</li>
+        <li>详情模态框查看</li>
+        <li>智能轮换训练日</li>
+        <li>一键开始训练</li>
+      </ul>
+    </div>
+    <!-- 动作库 -->
+    <div class="module-card" style="--module-color:var(--blue);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-book-medical"></i></div>
+        <div><div class="module-card-title">动作库</div><div class="module-card-group">训练</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>56+动作详解</li>
+        <li>搜索 + 部位筛选</li>
+        <li>步骤/要点/错误/呼吸</li>
+        <li>自定义动作CRUD</li>
+      </ul>
+    </div>
+    <!-- 人体部位图 -->
+    <div class="module-card" style="--module-color:var(--purple);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-person"></i></div>
+        <div><div class="module-card-title">人体部位图</div><div class="module-card-group">训练</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>SVG人体轮廓图</li>
+        <li>点击部位高亮</li>
+        <li>8大部位映射</li>
+        <li>右侧动作列表联动</li>
+      </ul>
+    </div>
+    <!-- 训练追踪 -->
+    <div class="module-card" style="--module-color:var(--orange);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-stopwatch"></i></div>
+        <div><div class="module-card-title">训练追踪</div><div class="module-card-group">训练</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>逐组记录重量/次数</li>
+        <li>自动保存会话</li>
+        <li>PR自动检测</li>
+        <li>连续天数更新</li>
+        <li>成就解锁检测</li>
+      </ul>
+    </div>
+    <!-- 进度图表 -->
+    <div class="module-card" style="--module-color:var(--green);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div><div class="module-card-title">进度图表</div><div class="module-card-group">数据</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>体重变化折线图</li>
+        <li>5项力量PR记录</li>
+        <li>身体围度表格</li>
+        <li>手动记录/删除</li>
+      </ul>
+    </div>
+    <!-- 训练历史 -->
+    <div class="module-card" style="--module-color:var(--cyan);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div><div class="module-card-title">训练历史</div><div class="module-card-group">数据</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>全部训练记录列表</li>
+        <li>按日期倒序排列</li>
+        <li>训练容量统计</li>
+        <li>单条删除</li>
+      </ul>
+    </div>
+    <!-- 营养方案 -->
+    <div class="module-card" style="--module-color:var(--red);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-apple-whole"></i></div>
+        <div><div class="module-card-title">营养方案</div><div class="module-card-group">工具</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>宏量营养素计算器</li>
+        <li>3套饮食方案</li>
+        <li>每日餐单详情</li>
+        <li>BMR/TDEE公式</li>
+      </ul>
+    </div>
+    <!-- 计算器 -->
+    <div class="module-card" style="--module-color:var(--blue);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-calculator"></i></div>
+        <div><div class="module-card-title">计算器</div><div class="module-card-group">工具</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>BMI身体质量指数</li>
+        <li>1RM Epley公式</li>
+        <li>US Navy体脂率</li>
+        <li>TDEE每日总消耗</li>
+      </ul>
+    </div>
+    <!-- 计时器 -->
+    <div class="module-card" style="--module-color:var(--purple);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-stopwatch-20"></i></div>
+        <div><div class="module-card-title">计时器</div><div class="module-card-group">工具</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>休息倒计时(SVG环形)</li>
+        <li>HIIT间歇训练</li>
+        <li>秒表(计圈功能)</li>
+        <li>蜂鸣音提示</li>
+      </ul>
+    </div>
+    <!-- 设置 -->
+    <div class="module-card" style="--module-color:var(--gold);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-user-shield"></i></div>
+        <div><div class="module-card-title">设置</div><div class="module-card-group">个人</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>个人资料编辑</li>
+        <li>训练数据概览</li>
+        <li>清空数据</li>
+        <li>开发者信息</li>
+      </ul>
+    </div>
+    <!-- 成就 -->
+    <div class="module-card" style="--module-color:var(--orange);">
+      <div class="module-card-head">
+        <div class="module-card-icon"><i class="fa-solid fa-trophy"></i></div>
+        <div><div class="module-card-title">成就系统</div><div class="module-card-group">个人</div></div>
+      </div>
+      <ul class="module-card-funcs">
+        <li>11项成就里程碑</li>
+        <li>完成度百分比</li>
+        <li>自动检测解锁</li>
+        <li>条件函数式判定</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 06 文件结构 ===== -->
+<section class="arch-section" id="s06">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-title-group">
+      <h2>文件结构</h2>
+      <div class="en">FILE STRUCTURE</div>
+    </div>
+  </div>
+  <div class="file-tree">
+    <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--gold);"></i>力哥健身训练/</span></div>
+    <div class="tree-indent">
+      <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--orange);"></i><span class="tree-file">index.html</span><span class="tree-comment">&larr; 主应用入口 (SPA容器, 700行)</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--orange);"></i><span class="tree-file">syjc.html</span><span class="tree-comment">&larr; 使用教程 (16章节)</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--orange);"></i><span class="tree-file">privacy.html</span><span class="tree-comment">&larr; 隐私政策 (11章节)</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--orange);"></i><span class="tree-file">userservices.html</span><span class="tree-comment">&larr; 用户服务协议 (10条款)</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--orange);"></i><span class="tree-file">architecture.html</span><span class="tree-comment">&larr; 本页面</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--yellow);"></i><span class="tree-file">syfw.js</span><span class="tree-comment">&larr; 首次使用欢迎弹窗</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-image tree-icon" style="color:var(--green);"></i><span class="tree-file">favicon.png</span><span class="tree-comment">&larr; 应用图标</span></div>
+      <div class="tree-node"><i class="fa-solid fa-file-lines tree-icon" style="color:var(--text-muted);"></i><span class="tree-file">webapp.json</span><span class="tree-comment">&larr; 安卓打包配置</span></div>
+      <br>
+      <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--blue);"></i>css/</span></div>
+      <div class="tree-indent-2">
+        <div class="tree-node"><i class="fa-brands fa-css3-alt tree-icon" style="color:var(--blue);"></i><span class="tree-file">styles.css</span><span class="tree-comment">&larr; 主样式 (主题/布局/组件/动画)</span></div>
+      </div>
+      <br>
+      <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--yellow);"></i>js/</span></div>
+      <div class="tree-indent-2">
+        <div class="tree-node"><i class="fa-brands fa-js tree-icon" style="color:var(--yellow);"></i><span class="tree-file">data.js</span><span class="tree-comment">&larr; 静态数据库 (动作/计划/饮食/成就)</span></div>
+        <div class="tree-node"><i class="fa-brands fa-js tree-icon" style="color:var(--yellow);"></i><span class="tree-file">app.js</span><span class="tree-comment">&larr; 主应用逻辑 (状态/渲染/交互/存储)</span></div>
+      </div>
+      <br>
+      <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--purple);"></i>lib/</span> <span class="tree-comment">&larr; 第三方资源(全本地化)</span></div>
+      <div class="tree-indent-2">
+        <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--blue);"></i>fontawesome/</span></div>
+        <div class="tree-indent-3">
+          <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--text-muted);"></i>css/</span> <span class="tree-file">all.min.css</span></div>
+          <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--text-muted);"></i>webfonts/</span> <span class="tree-comment">(5个字体文件)</span></div>
+        </div>
+        <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--red);"></i>google-fonts/</span></div>
+        <div class="tree-indent-3">
+          <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--text-muted);"></i>fonts/</span> <span class="tree-comment">(Oswald + Inter woff2)</span></div>
+          <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--blue);"></i><span class="tree-file">fonts.css</span></div>
+        </div>
+        <div class="tree-node"><span class="tree-dir"><i class="fa-solid fa-folder tree-icon" style="color:var(--green);"></i>js/</span></div>
+        <div class="tree-indent-3">
+          <div class="tree-node"><i class="fa-solid fa-file-code tree-icon" style="color:var(--green);"></i><span class="tree-file">chart.umd.min.js</span> <span class="tree-comment">&larr; Chart.js v4</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 07 数据模型 ===== -->
+<section class="arch-section" id="s07">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div class="section-title-group">
+      <h2>数据模型</h2>
+      <div class="en">DATA MODEL</div>
+    </div>
+  </div>
+  <p style="font-size:16px;color:var(--text-secondary);max-width:700px;margin-bottom:32px;">
+    运行时状态由全局 <code style="color:var(--gold);">state</code> 对象管理，包含个人资料、训练记录、身体数据、PR、成就等。
+    训练会话由独立的 <code style="color:var(--gold);">activeSession</code> 对象管理。
+  </p>
+
+  <div class="data-model-grid">
+    <!-- state主对象 -->
+    <div class="data-model-card" style="--model-color:var(--gold);">
+      <h4><i class="fa-solid fa-database"></i> state (主状态对象)</h4>
+<pre><span class="key">state</span> = {
+  <span class="key">profile</span>: {
+    <span class="key">name</span>: <span class="str">'FORGE'</span>,
+    <span class="key">gender</span>: <span class="str">'male'</span>,
+    <span class="key">age</span>: <span class="type">25</span>, <span class="key">height</span>: <span class="type">175</span>,
+    <span class="key">weight</span>: <span class="type">70</span>,
+    <span class="key">goal</span>: <span class="str">'bulk'</span>,
+    <span class="key">level</span>: <span class="str">'beginner'</span>
+  },
+  <span class="comment">// ... 见右侧其他模型</span>
+}</pre>
+      <p>存储在 <code>forge_fitness_data</code> 键中，每次修改后调用 save() 持久化。</p>
+    </div>
+
+    <!-- 训练记录 -->
+    <div class="data-model-card" style="--model-color:var(--orange);">
+      <h4><i class="fa-solid fa-dumbbell"></i> workouts[] (训练记录)</h4>
+<pre>{
+  <span class="key">id</span>: <span class="str">'lmx...'</span>,
+  <span class="key">date</span>: <span class="str">'2026-08-09'</span>,
+  <span class="key">name</span>: <span class="str">'推日A'</span>,
+  <span class="key">planId</span>: <span class="str">'ppl'</span>,
+  <span class="key">duration</span>: <span class="type">3600</span>,
+  <span class="key">exercises</span>: [{
+    <span class="key">id</span>: <span class="str">'ch1'</span>,
+    <span class="key">name</span>: <span class="str">'杠铃卧推'</span>,
+    <span class="key">sets</span>: [{
+      <span class="key">weight</span>: <span class="str">'80'</span>,
+      <span class="key">reps</span>: <span class="str">'8'</span>,
+      <span class="key">done</span>: <span class="type">true</span>
+    }]
+  }]
+}</pre>
+      <p>每次完成训练时 push 到 state.workouts 数组。</p>
+    </div>
+
+    <!-- 身体测量 -->
+    <div class="data-model-card" style="--model-color:var(--green);">
+      <h4><i class="fa-solid fa-weight-scale"></i> measurements[] (身体数据)</h4>
+<pre>{
+  <span class="key">date</span>: <span class="str">'2026-08-09'</span>,
+  <span class="key">weight</span>: <span class="type">72.5</span>,
+  <span class="key">bodyfat</span>: <span class="type">15.2</span>,
+  <span class="key">chest</span>: <span class="type">98</span>,
+  <span class="key">waist</span>: <span class="type">82</span>,
+  <span class="key">arm</span>: <span class="type">36</span>,
+  <span class="key">thigh</span>: <span class="type">55</span>
+}</pre>
+      <p>用于体重曲线图和围度表格展示。</p>
+    </div>
+
+    <!-- PR记录 -->
+    <div class="data-model-card" style="--model-color:var(--red);">
+      <h4><i class="fa-solid fa-trophy"></i> prs (力量PR)</h4>
+<pre><span class="key">prs</span> = {
+  <span class="key">bench</span>: <span class="type">80</span>,    <span class="comment">// 卧推</span>
+  <span class="key">squat</span>: <span class="type">100</span>,   <span class="comment">// 深蹲</span>
+  <span class="key">deadlift</span>: <span class="type">120</span>, <span class="comment">// 硬拉</span>
+  <span class="key">opress</span>: <span class="type">50</span>,    <span class="comment">// 推举</span>
+  <span class="key">row</span>: <span class="type">70</span>       <span class="comment">// 划船</span>
+}</pre>
+      <p>卧推/深蹲/硬拉训练时自动检测，推举/划船手动记录。</p>
+    </div>
+
+    <!-- 训练会话 -->
+    <div class="data-model-card" style="--model-color:var(--purple);">
+      <h4><i class="fa-solid fa-stopwatch"></i> activeSession (训练会话)</h4>
+<pre>{
+  <span class="key">id</span>: <span class="str">'uid...'</span>,
+  <span class="key">date</span>: <span class="str">'2026-08-09'</span>,
+  <span class="key">name</span>: <span class="str">'推日A'</span>,
+  <span class="key">planId</span>: <span class="str">'ppl'</span>,
+  <span class="key">startTime</span>: <span class="type">1723...'</span>,
+  <span class="key">exercises</span>: [{
+    <span class="key">id</span>: <span class="str">'ch1'</span>,
+    <span class="key">targetSets</span>: <span class="type">4</span>,
+    <span class="key">sets</span>: [
+      {<span class="key">weight</span>:<span class="str">''</span>, <span class="key">reps</span>:<span class="str">''</span>, <span class="key">done</span>:<span class="type">false</span>}
+    ]
+  }]
+}</pre>
+      <p>独立存储在 <code>forge_active_session</code>，训练完成时清除。</p>
+    </div>
+
+    <!-- 自定义内容 -->
+    <div class="data-model-card" style="--model-color:var(--cyan);">
+      <h4><i class="fa-solid fa-sliders"></i> 自定义数据</h4>
+<pre><span class="comment">// 自定义部位</span>
+<span class="key">customParts</span>: [{
+  <span class="key">key</span>: <span class="str">'custom_xxx'</span>,
+  <span class="key">name</span>: <span class="str">'前臂'</span>,
+  <span class="key">icon</span>: <span class="str">'fa-hand-fist'</span>,
+  <span class="key">color</span>: <span class="str">'#d4af37'</span>
+}]
+
+<span class="comment">// 自定义动作 / 自定义器材</span>
+<span class="key">customExercises</span>: [...]
+<span class="key">customEquipment</span>: [...]</pre>
+      <p>用户可自定义训练部位、器材和动作，与内置数据合并使用。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 08 存储机制 ===== -->
+<section class="arch-section" id="s08">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div class="section-title-group">
+      <h2>存储机制</h2>
+      <div class="en">STORAGE MECHANISM</div>
+    </div>
+  </div>
+  <p style="font-size:16px;color:var(--text-secondary);max-width:700px;margin-bottom:32px;">
+    所有数据通过浏览器 <code style="color:var(--gold);">localStorage</code> 存储，JSON 序列化/反序列化。
+    3 个存储键各司其职，零网络传输。
+  </p>
+
+  <div class="diagram-card">
+    <div class="storage-flow">
+      <div class="storage-box">
+        <div class="sb-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+        <div class="sb-title">用户操作</div>
+        <div class="sb-sub">输入/点击/提交</div>
+      </div>
+      <div class="storage-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
+      <div class="storage-box">
+        <div class="sb-icon"><i class="fa-solid fa-gears"></i></div>
+        <div class="sb-title">state 更新</div>
+        <div class="sb-sub">内存对象修改</div>
+      </div>
+      <div class="storage-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
+      <div class="storage-box highlight">
+        <div class="sb-icon"><i class="fa-solid fa-database"></i></div>
+        <div class="sb-title">JSON.stringify</div>
+        <div class="sb-sub">序列化</div>
+      </div>
+      <div class="storage-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
+      <div class="storage-box">
+        <div class="sb-icon"><i class="fa-solid fa-hard-drive"></i></div>
+        <div class="sb-title">localStorage</div>
+        <div class="sb-sub">setItem(key, json)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="storage-keys">
+    <div class="storage-key-card" style="--key-color:var(--gold);">
+      <h5>forge_fitness_data</h5>
+      <p>主数据键。存储所有训练记录、身体测量、PR、成就、个人资料、自定义内容。每次状态变更后由 <code style="color:var(--gold);">save()</code> 写入。</p>
+      <span class="key-type">JSON · 永久存储</span>
+    </div>
+    <div class="storage-key-card" style="--key-color:var(--orange);">
+      <h5>forge_active_session</h5>
+      <p>训练会话键。存储当前进行中的训练会话，支持刷新恢复。训练完成时由 <code style="color:var(--gold);">saveSession()</code> 清除。</p>
+      <span class="key-type">JSON · 临时存储</span>
+    </div>
+    <div class="storage-key-card" style="--key-color:var(--blue);">
+      <h5>app_tip_version</h5>
+      <p>欢迎弹窗版本号。由 <code style="color:var(--gold);">syfw.js</code> 管理，版本号变更后所有用户下次打开重新弹窗。</p>
+      <span class="key-type">String · 永久存储</span>
+    </div>
+    <div class="storage-key-card" style="--key-color:var(--green);">
+      <h5>核心函数</h5>
+      <p>
+        <code style="color:var(--gold);">load()</code> — 启动时从 localStorage 恢复 state<br>
+        <code style="color:var(--gold);">save()</code> — 状态变更时持久化 state<br>
+        <code style="color:var(--gold);">saveSession()</code> — 训练会话自动保存/清除
+      </p>
+      <span class="key-type">3 个核心函数</span>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title"><i class="fa-solid fa-shield-halved"></i> 隐私安全</div>
+    <p>localStorage 数据不随 HTTP 请求发送到服务器，受浏览器同源策略保护，其他网站无法访问。数据完全在用户设备本地，开发者也无法访问。</p>
+  </div>
+</section>
+
+<!-- ===== 09 设计系统 ===== -->
+<section class="arch-section" id="s09">
+  <div class="section-header">
+    <div class="section-num">09</div>
+    <div class="section-title-group">
+      <h2>设计系统</h2>
+      <div class="en">DESIGN SYSTEM</div>
+    </div>
+  </div>
+
+  <div class="design-grid">
+    <!-- 色板 -->
+    <div class="design-card">
+      <h4><i class="fa-solid fa-palette"></i> 色彩系统</h4>
+      <div class="color-swatch-grid">
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#0a0a0b;"></div>
+          <div class="swatch-name">bg-darkest</div><div class="swatch-value">#0a0a0b</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#121316;"></div>
+          <div class="swatch-name">bg-dark</div><div class="swatch-value">#121316</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#1a1c20;"></div>
+          <div class="swatch-name">bg-card</div><div class="swatch-value">#1a1c20</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#d4af37;"></div>
+          <div class="swatch-name">gold</div><div class="swatch-value">#d4af37</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#e8c454;"></div>
+          <div class="swatch-name">gold-light</div><div class="swatch-value">#e8c454</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#a8851f;"></div>
+          <div class="swatch-name">gold-dark</div><div class="swatch-value">#a8851f</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#dc2626;"></div>
+          <div class="swatch-name">red</div><div class="swatch-value">#dc2626</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#10b981;"></div>
+          <div class="swatch-name">green</div><div class="swatch-value">#10b981</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#3b82f6;"></div>
+          <div class="swatch-name">blue</div><div class="swatch-value">#3b82f6</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#f59e0b;"></div>
+          <div class="swatch-name">orange</div><div class="swatch-value">#f59e0b</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#a855f7;"></div>
+          <div class="swatch-name">purple</div><div class="swatch-value">#a855f7</div>
+        </div>
+        <div class="color-swatch">
+          <div class="swatch-color" style="background:#f5f5f5;"></div>
+          <div class="swatch-name">text-primary</div><div class="swatch-value">#f5f5f5</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 字体 -->
+    <div class="design-card">
+      <h4><i class="fa-solid fa-font"></i> 字体系统</h4>
+      <div class="font-demo">
+        <div class="sample" style="font-family:'Oswald',sans-serif;font-weight:700;color:var(--gold);">Oswald 700</div>
+        <div class="info">font-family: 'Oswald' | 用途: 标题/数字/标签</div>
+      </div>
+      <div class="font-demo">
+        <div class="sample" style="font-family:'Inter',sans-serif;color:var(--text-primary);">Inter Regular</div>
+        <div class="info">font-family: 'Inter' | 用途: 正文/描述/UI</div>
+      </div>
+      <div class="font-demo">
+        <div class="sample" style="font-family:'Courier New',monospace;color:var(--cyan);font-size:18px;">Courier Code</div>
+        <div class="info">font-family: monospace | 用途: 代码/数据模型</div>
+      </div>
+      <div style="margin-top:16px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-muted);font-size:13px;">H1 标题</span>
+          <span style="font-family:'Oswald';font-size:13px;color:var(--gold);">48px / 700</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-muted);font-size:13px;">H2 章节</span>
+          <span style="font-family:'Oswald';font-size:13px;color:var(--gold);">26px / 700</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-muted);font-size:13px;">卡片标题</span>
+          <span style="font-family:'Oswald';font-size:13px;color:var(--gold);">16px / 600</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;">
+          <span style="color:var(--text-muted);font-size:13px;">正文</span>
+          <span style="font-size:13px;color:var(--gold);">15px / 400</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 间距/圆角 -->
+    <div class="design-card">
+      <h4><i class="fa-solid fa-ruler-combined"></i> 间距与圆角</h4>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">圆角系统</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="width:50px;height:50px;background:var(--gold);border-radius:6px;margin:0 auto 4px;"></div>
+            <div style="font-size:11px;color:var(--text-muted);">--radius-sm<br>6px</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:50px;height:50px;background:var(--gold);border-radius:10px;margin:0 auto 4px;"></div>
+            <div style="font-size:11px;color:var(--text-muted);">--radius<br>10px</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:50px;height:50px;background:var(--gold);border-radius:16px;margin:0 auto 4px;"></div>
+            <div style="font-size:11px;color:var(--text-muted);">--radius-lg<br>16px</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:50px;height:50px;background:var(--gold);border-radius:999px;margin:0 auto 4px;"></div>
+            <div style="font-size:11px;color:var(--text-muted);">pill<br>999px</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">间距系统</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:8px;height:16px;background:var(--gold);border-radius:2px;"></div><span style="font-size:12px;color:var(--text-secondary);">8px — 紧凑间距 (gap-1)</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:16px;height:16px;background:var(--gold);border-radius:2px;"></div><span style="font-size:12px;color:var(--text-secondary);">16px — 标准间距 (gap-2)</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:16px;background:var(--gold);border-radius:2px;"></div><span style="font-size:12px;color:var(--text-secondary);">24px — 内容间距 (padding)</span></div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:48px;height:16px;background:var(--gold);border-radius:2px;"></div><span style="font-size:12px;color:var(--text-secondary);">48px — 区块间距 (section)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 响应式 -->
+    <div class="design-card">
+      <h4><i class="fa-solid fa-mobile-screen"></i> 响应式断点</h4>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <i class="fa-solid fa-desktop" style="color:var(--blue);font-size:18px;"></i>
+            <span style="font-family:'Oswald';font-weight:600;font-size:15px;">桌面端</span>
+            <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">&gt; 1024px</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);">240px固定侧边栏 + 顶部栏 + 内容区</p>
+        </div>
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <i class="fa-solid fa-tablet-screen-button" style="color:var(--orange);font-size:18px;"></i>
+            <span style="font-family:'Oswald';font-weight:600;font-size:15px;">平板端</span>
+            <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">768px - 1024px</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);">侧边栏隐藏，汉堡菜单弹出</p>
+        </div>
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <i class="fa-solid fa-mobile-screen-button" style="color:var(--green);font-size:18px;"></i>
+            <span style="font-family:'Oswald';font-weight:600;font-size:15px;">移动端</span>
+            <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">&lt; 768px</span>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);">底部5项Tab导航 + 全宽内容</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 组件系统 -->
+    <div class="design-card">
+      <h4><i class="fa-solid fa-cubes"></i> 组件系统</h4>
+      <div class="table-wrap" style="border:none;">
+        <table>
+          <thead><tr><th>组件</th><th>用途</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-gold">card</span></td><td>通用卡片容器</td></tr>
+            <tr><td><span class="badge badge-gold">btn</span></td><td>按钮(primary/secondary/ghost)</td></tr>
+            <tr><td><span class="badge badge-gold">badge</span></td><td>标签徽章(5色)</td></tr>
+            <tr><td><span class="badge badge-gold">stat-card</span></td><td>统计卡片(4色)</td></tr>
+            <tr><td><span class="badge badge-gold">plan-card</span></td><td>训练计划卡片</td></tr>
+            <tr><td><span class="badge badge-gold">exercise-card</span></td><td>动作卡片</td></tr>
+            <tr><td><span class="badge badge-gold">modal-*</span></td><td>模态框系统</td></tr>
+            <tr><td><span class="badge badge-gold">toast</span></td><td>通知提示</td></tr>
+            <tr><td><span class="badge badge-gold">input/select</span></td><td>表单控件</td></tr>
+            <tr><td><span class="badge badge-gold">nav-item</span></td><td>导航项</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 动画系统 -->
+    <div class="design-card">
+      <h4><i class="fa-solid fa-wand-magic-sparkles"></i> 动画系统</h4>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-family:'Oswald';font-weight:600;font-size:14px;color:var(--gold);margin-bottom:4px;">fadeIn 页面切换</div>
+          <p style="font-size:12px;color:var(--text-secondary);">opacity 0→1 + translateY 10px→0, 0.4s ease</p>
+        </div>
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-family:'Oswald';font-weight:600;font-size:14px;color:var(--gold);margin-bottom:4px;">Toast 滑入滑出</div>
+          <p style="font-size:12px;color:var(--text-secondary);">translateX 100%→0, 2.6s后滑出</p>
+        </div>
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-family:'Oswald';font-weight:600;font-size:14px;color:var(--gold);margin-bottom:4px;">Hover 过渡</div>
+          <p style="font-size:12px;color:var(--text-secondary);">cubic-bezier(0.4,0,0.2,1), 0.25s</p>
+        </div>
+        <div style="background:var(--bg-darkest);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+          <div style="font-family:'Oswald';font-weight:600;font-size:14px;color:var(--gold);margin-bottom:4px;">跑马灯滚动</div>
+          <p style="font-size:12px;color:var(--text-secondary);">模态框描述文字溢出时自动滚动</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 第三方依赖 ===== -->
+<section class="arch-section" id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div class="section-title-group">
+      <h2>第三方依赖</h2>
+      <div class="en">DEPENDENCIES</div>
+    </div>
+  </div>
+  <p style="font-size:16px;color:var(--text-secondary);max-width:700px;margin-bottom:32px;">
+    所有第三方库均本地化引入，无 CDN 依赖，确保离线可用。
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>库名称</th><th>版本</th><th>许可证</th><th>引入方式</th><th>用途</th><th>体积</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Chart.js</strong></td>
+          <td><span class="badge badge-blue">v4 UMD</span></td>
+          <td>MIT</td>
+          <td><code style="color:var(--gold);">&lt;script&gt; 本地</code></td>
+          <td>柱状图/环形图/折线图</td>
+          <td>~200KB</td>
+        </tr>
+        <tr>
+          <td><strong>Font Awesome</strong></td>
+          <td><span class="badge badge-blue">v6 Free</span></td>
+          <td>CC BY 4.0</td>
+          <td><code style="color:var(--gold);">&lt;link&gt; 本地CSS</code></td>
+          <td>全站图标系统</td>
+          <td>~300KB</td>
+        </tr>
+        <tr>
+          <td><strong>Google Fonts</strong></td>
+          <td><span class="badge badge-blue">Oswald+Inter</span></td>
+          <td>OFL</td>
+          <td><code style="color:var(--gold);">&lt;link&gt; 本地CSS</code></td>
+          <td>显示+正文字体</td>
+          <td>~50KB</td>
+        </tr>
+        <tr>
+          <td><strong>bbkz.js</strong></td>
+          <td><span class="badge badge-purple">外部</span></td>
+          <td>-</td>
+          <td><code style="color:var(--red);">&lt;script&gt; Netlify CDN</code></td>
+          <td>APP辅助功能</td>
+          <td>极小</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title"><i class="fa-solid fa-circle-info"></i> 离线策略</div>
+    <p>除 bbkz.js 外，所有第三方资源均已下载到 <code style="color:var(--gold);">lib/</code> 目录本地化引入。首次加载后应用可完全离线运行，不依赖任何 CDN 或网络连接。</p>
+  </div>
+
+  <div class="metric-row" style="margin-top:32px;">
+    <div class="metric-item"><div class="metric-num">3</div><div class="metric-label">本地化库</div></div>
+    <div class="metric-item"><div class="metric-num">1</div><div class="metric-label">外部脚本</div></div>
+    <div class="metric-item"><div class="metric-num">~550KB</div><div class="metric-label">依赖总体积</div></div>
+    <div class="metric-item"><div class="metric-num">0</div><div class="metric-label">npm包</div></div>
+  </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="footer">
+  <div class="footer-brand"><i class="fa-solid fa-dumbbell"></i> 力哥 · 健身训练系统</div>
+  <p>全栈技术架构文档 · 基于源码分析生成</p>
+  <p style="margin-top:8px;">© 2026 不见桃花不见秋 · 版权所有</p>
+  <p style="margin-top:4px;">纯前端零后端架构 · localStorage持久化 · 离线可用</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  // 侧边栏切换
+  var sidebar=document.getElementById('toc');
+  var toggle=document.getElementById('tocToggle');
+  var overlay=document.getElementById('tocOverlay');
+  function openSidebar(){sidebar.classList.add('open');overlay.classList.add('show');}
+  function closeSidebar(){sidebar.classList.remove('open');overlay.classList.remove('show');}
+  toggle.addEventListener('click',function(){
+    sidebar.classList.contains('open')?closeSidebar():openSidebar();
+  });
+  overlay.addEventListener('click',closeSidebar);
+
+  // 滚动高亮当前章节
+  var sections=document.querySelectorAll('.arch-section');
+  var tocLinks=document.querySelectorAll('.toc-item');
+  if('IntersectionObserver' in window){
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id=entry.target.id;
+          tocLinks.forEach(function(link){
+            link.classList.toggle('active',link.getAttribute('href')==='#'+id);
+          });
+        }
+      });
+    },{rootMargin:'-20% 0px -70% 0px'});
+    sections.forEach(function(s){observer.observe(s);});
+  }
+
+  // 点击导航关闭移动端侧边栏
+  tocLinks.forEach(function(link){
+    link.addEventListener('click',function(){
+      if(window.innerWidth<=1024){closeSidebar();}
+    });
+  });
+})();
+</script>
+</body>
+</html>
