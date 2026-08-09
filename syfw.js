@@ -27,7 +27,7 @@ window.addEventListener('load', function () {
         Object.assign(box.style, {
             maxWidth: '520px',
             width: '90%',
-            background: '#fff',
+            background: '#000',
             borderRadius: '10px',
             padding: '20px',
             maxHeight: '80vh',
